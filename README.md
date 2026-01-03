@@ -80,20 +80,6 @@ Password: tu_password_seguro (O la que esté en docker-compose.yml)
 
 Guarda y explora las tablas en: Servers > Hospital Docker > Databases > hospital_db > Schemas > public > Tables.
 
-## 📂 Estructura del Proyecto
-/
-├── docker-compose.yml    # Orquestación de servicios (db, app, pgadmin)
-├── Dockerfile            # Definición de la imagen de Python
-├── entrypoint.sh         # Script de inicio del contenedor
-├── requirements.txt      # Librerías (psycopg2, faker, psutil)
-├── sql/
-│   └── ddl/
-│       └── 01_schema.sql # Creación automática de tablas
-└── scripts/              # Scripts de generación de datos
-    ├── poblar_leve.py
-    ├── poblar_moderado.py
-    └── poblar_masivo.py
-
 ## 🛑 Detener el sistema
 Para apagar los contenedores conservando los datos:
 ```bash
