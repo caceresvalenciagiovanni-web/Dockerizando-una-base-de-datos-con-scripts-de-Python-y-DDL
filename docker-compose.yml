@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # 1. Base de Datos
+  db:
+    image: postgres:15-alpine
+    container_name: hospital_db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=tu_password_seguro
+      - POSTGRES_DB=hospital_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./sql/ddl/:/docker-entrypoint-initdb.d/
+    networks:
+      - hospital_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Aplicación (Python Poblador)
+  app:
+    build: .
+    container_name: hospital_poblador
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_HOST=db
+      - DB_NAME=hospital_db
+      - DB_USER=postgres
+      - DB_PASSWORD=tu_password_seguro
+      - NIVEL_POBLADO=${NIVEL_POBLADO:-leve}
+    networks:
+      - hospital_network
+    command: tail -f /dev/null
+
+  # 3. pgAdmin (Interfaz Gráfica Web)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: hospital_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@hospital.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - hospital_network
+
+volumes:
+  pg_data:
+
+networks:
+  hospital_network:
+    driver: bridge
