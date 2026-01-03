@@ -19,4 +19,19 @@ Para iniciar el sistema, elige el nivel de datos que deseas cargar configurando 
 ### Nivel 1: Poblado Leve (Desarrollo - Default)
 Carga ~200 registros. Ideal para pruebas rápidas.
 ```bash
-docker-compose up --build
+docker-compose up ..build
+
+### Nivel 2: Poblado Moderado (Batch)
+Carga ~20,000 registros usando inserción por lotes.
+```bash
+NIVEL_POBLADO=moderado docker-compose up --build
+
+### Nivel 3: Poblado Masivo (COPY)
+Carga ~1,300,000 registros usando buffers en memoria y COPY command.
+```bash
+NIVEL_POBLADO=masivo docker-compose up --build
+
+### 4. Limpieza
+Para borrar la base de datos y empezar de cero (incluyendo volúmenes):
+```bash
+docker-compose down -v
